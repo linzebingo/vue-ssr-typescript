@@ -1,9 +1,7 @@
-# vue-hackernews-2.0
+# vue-ssr-typescript
 
-HackerNews clone built with Vue 2.0 + vue-router + vuex, typescript with server-side rendering.
+vue-ssr-typescript built with Vue 2.0 + vue-router + vuex + typescript with server-side rendering, base on [vue-hackernews-2.0](https://github.com/vuejs/vue-hackernews-2.0)
 
-
-> Note: the demo may need some spin up time if nobody has accessed it for a certain period.
 
 ## Features
 
@@ -16,6 +14,7 @@ HackerNews clone built with Vue 2.0 + vue-router + vuex, typescript with server-
   - Hot-reload in development
   - CSS extraction for production
 - Real-time List Updates with FLIP Animation
+- Typescript
 
 
 ## Build Setup
