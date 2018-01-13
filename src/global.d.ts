@@ -1,7 +1,6 @@
 declare module '*.vue' {
   import Vue from 'vue'
-  let ComponentOptions: Vue.ComponentOptions<any>;
-  export default ComponentOptions;
+  export default Vue;
 }
 
 declare var require: {
