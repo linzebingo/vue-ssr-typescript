@@ -69,6 +69,19 @@ npm run build
 npm start
 ```
 
+## Run on Heroku
+
+To upload to heroku run following commands.
+
+Provided you are registered free account and 
+installed heroku-cli and logged in using `heroku login`
+```
+heroku create
+heroku git:remote --app %APP_NAME (from create output)%
+heroku config:set NPM_CONFIG_PRODUCTION=false
+git push heroku
+```
+
 ## License
 
 MIT
