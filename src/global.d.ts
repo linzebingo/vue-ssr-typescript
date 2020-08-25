@@ -1,23 +1,28 @@
-declare module '*.vue' {
-  import Vue from 'vue'
+declare module "*.vue" {
+  import Vue from "vue";
   export default Vue;
 }
 
 declare var require: {
   <T>(path: string): T;
   (paths: string[], callback: (...modules: any[]) => void): void;
-  ensure: (paths: string[], callback: (require: <T>(path: string) => T) => void) => void;
+  ensure: (
+    paths: string[],
+    callback: (require: <T>(path: string) => T) => void
+  ) => void;
 };
 
 declare var process: {
   env: {
-    NODE_ENV: any
-  },
+    NODE_ENV: any;
+    DEBUG_API: any;
+    VUE_ENV: any;
+  };
   __API__: any;
-}
+};
 
 interface Window {
   __INITIAL_STATE__: any;
 }
 
-declare module "create-api"
+declare module "create-api";

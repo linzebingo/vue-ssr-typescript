@@ -1,25 +1,15 @@
 const path = require('path')
-const vueConfig = require('./vue-loader.config')
+const webpack = require('webpack')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
+const { VueLoaderPlugin } = require('vue-loader')
 
 const isProd = process.env.NODE_ENV === 'production'
 
 module.exports = {
   devtool: isProd
     ? false
-    : '#cheap-module-eval-source-map',
-  entry: {
-    app: './src/entry-client.ts',
-    vendor: [
-      'es6-promise/auto',
-      'firebase/app',
-      'firebase/database',
-      'vue',
-      'vue-router',
-      'vuex',
-      'vuex-router-sync'
-    ]
-  },
+    : '#cheap-module-source-map',
   output: {
     path: path.resolve(__dirname, '../dist'),
     publicPath: '/dist/',
@@ -28,9 +18,7 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.vue', '.js'],
     alias: {
-      'public': path.resolve(__dirname, '../public'),
-      'vue$': 'vue/dist/vue.common.js'
-
+      'public': path.resolve(__dirname, '../public')
     }
   },
   module: {
@@ -39,15 +27,16 @@ module.exports = {
       {
         test: /\.vue$/,
         loader: 'vue-loader',
-        options: vueConfig
+        options: {
+          compilerOptions: {
+            preserveWhitespace: false
+          }
+        }
       },
       {
-        test: /\.ts$/,
-        loader: 'ts-loader',
-        exclude: /node_modules/,
-        options: {
-          appendTsSuffixTo: [/\.vue$/],
-        }
+        test: /\.(t|j)s$/,
+        loader: 'babel-loader',
+        exclude: /node_modules/
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
@@ -56,14 +45,40 @@ module.exports = {
           limit: 10000,
           name: '[name].[ext]?[hash]'
         }
-      }
+      },
+      {
+        test: /\.styl(us)?$/,
+        use: isProd
+          ? ExtractTextPlugin.extract({
+              use: [
+                {
+                  loader: 'css-loader',
+                  options: { minimize: true }
+                },
+                'stylus-loader'
+              ],
+              fallback: 'vue-style-loader'
+            })
+          : ['vue-style-loader', 'css-loader', 'stylus-loader']
+      },
     ]
   },
   performance: {
-    maxEntrypointSize: 300000,
-    hints: isProd ? 'warning' : false
+    hints: false
   },
-  plugins: isProd ? [] : [
-    new FriendlyErrorsPlugin()
-  ]
+  plugins: isProd
+    ? [
+        new VueLoaderPlugin(),
+        new webpack.optimize.UglifyJsPlugin({
+          compress: { warnings: false }
+        }),
+        new webpack.optimize.ModuleConcatenationPlugin(),
+        new ExtractTextPlugin({
+          filename: 'common.[chunkhash].css'
+        })
+      ]
+    : [
+        new VueLoaderPlugin(),
+        new FriendlyErrorsPlugin()
+      ]
 }
